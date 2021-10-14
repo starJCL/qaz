@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AppInfomapper">
+	<resultMap type="AppInfo" id="m1">
+		<result column="san" property="categoryLevel3Name"/>
+	</resultMap>
+	<select id="list" resultMap="m1">
+		SELECT z.*
+		,concat(a.`categoryName`,'-',b.`categoryName`,'-',c.`categoryName`) as
+		san FROM `app_info` as z
+		join `app_category` as a on z.categoryLevel1=a.id
+		join `app_category` as b on z.categoryLevel2=b.id
+		join `app_category` as c on z.categoryLevel3=c.id
+		WHERE
+		`softwareName` LIKE #{name}
+		<if test="a==1">ORDER BY id DESC</if>
+		LIMIT #{start},8
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT COUNT(id) FROM `app_info`
+		WHERE `softwareName` LIKE #{name}
+	</select>
+
+	<update id="up">
+		update `app_info` set `softwareName`=#{softwareName},
+		`APKName`=#{APKName},`supportROM`=#{supportROM},`interfaceLanguage`=#{interfaceLanguage}
+		where id = #{id}
+	</update>
+	<!-- 删除多条数据 -->
+	<delete id="delAll">
+		delete from `app_info` where id in 
+		<foreach collection="list" open="(" close=")" separator="," item="i">
+			${i}
+			
+		</foreach>
+	
+	</delete>
+
+	<delete id="del">
+		delete from `app_info` where id =#{id}
+	</delete>
+
+	<insert id="ins">
+		INSERT INTO
+		`app_info`(`softwareName`,`APKName`,`supportROM`,`interfaceLanguage`,logoPicPath,logoLocPath,categoryLevel1,categoryLevel2,categoryLevel3)
+		VALUE(#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},#{logoPicPath},#{logoLocPath},#{categoryLevel1},#{categoryLevel2},#{categoryLevel3})
+	</insert>
+
+	<select id="getList" resultType="AppInfo">
+		SELECT * FROM `app_info` where
+		id = #{id}
+	</select>
+
+
+</mapper>

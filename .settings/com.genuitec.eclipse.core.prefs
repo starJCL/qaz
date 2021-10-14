@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+validator.Checked=WebRoot/appinfo/list.jsp,WebRoot/jqvmap,WebRoot/js
+validator.Unchecked=WebRoot/jqvmap/maps
